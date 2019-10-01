@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 
 @Path("periodsorgGet")
 public class PeriodsOrgResource {
-        String dbConnection = "jdbc:postgresql://ip/database?user=&password=";
+    String dbConnection = "jdbc:postgresql://localhost/mohdsl?user=postgres&password=";
 	@GET
 	@Path("{id}/{dataelementid}/{categoryoptioncomboid}") //"{id - indicator id}/{dataelementid}/{categoryoptioncomboid}
 	 @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
@@ -30,13 +30,13 @@ public class PeriodsOrgResource {
 		if (ccategoryoptioncomboid == zerocheck) {
 			innerSQL = "SELECT fact_dhis_datavalue.periodid, fact_dhis_datavalue.sourceid " +
 							"from fact_dhis_datavalue " +
-							"where sourceid=23408 and dataelementid =" +  cdataelementid + " group by fact_dhis_datavalue.periodid, fact_dhis_datavalue.sourceid " +
+							"where dataelementid =" +  cdataelementid + " group by fact_dhis_datavalue.periodid, fact_dhis_datavalue.sourceid " +
 							"order by periodid";
 				}
 		else {
 			innerSQL = "SELECT fact_dhis_datavalue.periodid, fact_dhis_datavalue.sourceid " +
 					"from fact_dhis_datavalue " +
-					"where sourceid=23408 and dataelementid =" +  cdataelementid + " AND categoryoptioncomboid = " + ccategoryoptioncomboid + " group by fact_dhis_datavalue.periodid, fact_dhis_datavalue.sourceid " +
+					"where dataelementid =" +  cdataelementid + " AND categoryoptioncomboid = " + ccategoryoptioncomboid + " group by fact_dhis_datavalue.periodid, fact_dhis_datavalue.sourceid " +
 					"order by periodid";
 		}
 		Connection conn1 = null;

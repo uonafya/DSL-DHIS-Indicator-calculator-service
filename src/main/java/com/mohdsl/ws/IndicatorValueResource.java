@@ -21,7 +21,7 @@ import javax.ws.rs.Produces;
 @Produces("application/json")
 @Path("IndicatorValueGet")
 public class IndicatorValueResource {
-        String dbConnection = "jdbc:postgresql://ip/database?user=&password=";
+    String dbConnection = "jdbc:postgresql://localhost/mohdsl?user=postgres&password=";
 	@GET
 	@Path("{id}/{periodid}/{sourceid}")
 	@Produces("application/json")
@@ -327,11 +327,11 @@ public class IndicatorValueResource {
 						
 				finalSQLNum=  finalSQLNum.replace("'", "");
 				finalSQLDen=  finalSQLDen.replace("'", "");
-				InsertSQL="INSERT INTO fact_dhis_indicatorcalculatedvalues_orig(" +
+				InsertSQL="INSERT INTO fact_dhis_indicatorcalculatedvalues(" +
 		 				"indicatorid, periodid, sourceid, value, numeratorsql, denominatorsql, numeratorvalue, denominatorvalue)" +
 		 			" SELECT " + cId  + "," + cperiodid + "," + csourceid + "," + indicatorValue + ",'" + finalSQLNum + "','" +  finalSQLDen + "," + numeratorValue + "," + denominatorValue + "";
 				
-				UpdateSQL="UPDATE fact_dhis_indicatorcalculatedvalues_orig SET value = " + indicatorValue + ", numeratorsql = " + "'" + finalSQLNum + "', denominatorsql = " + "'" +  finalSQLDen + "'" +
+				UpdateSQL="UPDATE fact_dhis_indicatorcalculatedvalues SET value = " + indicatorValue + ", numeratorsql = " + "'" + finalSQLNum + "', denominatorsql = " + "'" +  finalSQLDen + "'" +
 						"numeratorvalue = " + numeratorValue + " , " + " denominatorvalue = " + denominatorValue + 
 		 				" WHERE indicatorid = " + cId + " AND periodid = " + cperiodid + " AND sourceid = " + csourceid + "";
 				UpsertSQL = "WITH upsert AS (" + UpdateSQL + " RETURNING *) " + InsertSQL + " WHERE NOT EXISTS (SELECT * FROM upsert)";

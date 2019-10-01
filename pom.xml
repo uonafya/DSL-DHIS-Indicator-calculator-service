@@ -53,7 +53,7 @@
   
 
     <build>
-        <finalName>JerseyDemos</finalName>
+        <finalName>moh-dsl-dhis</finalName>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>

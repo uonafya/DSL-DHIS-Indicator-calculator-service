@@ -15,7 +15,7 @@ import javax.ws.rs.Produces;
 @Produces("application/xml")
 @Path("numeratordenominator")
 public class NumeratorDenominatorResource {
-        String dbConnection = "jdbc:postgresql://ip/database?user=&password=";
+    String dbConnection = "jdbc:postgresql://host:port/database?user=&password=";
 	@GET
 	@Path("{indId}")
 	public String getNumeratorDenominator(@PathParam("indId") int indId) {			
@@ -59,7 +59,8 @@ public class NumeratorDenominatorResource {
 							}else{
 								computation="SUM";
 							}
-						innerSQL = innerSQL +  " COALESCE(" + computation + "(value::numeric), 0) as " + sqlvalue1 + " from test_ward_org_unit where dataelementid = " + rs.getInt("dataelementid");
+						innerSQL = innerSQL +  " COALESCE(" + computation + "(value::numeric), 0) as " + sqlvalue1 + " from fact_dhis_datavalue where dataelementid = " + rs.getInt("dataelementid")+
+                                                        " and (length(value) !=0) and value is not null";
 						}
 					if (rs.getString("categoryoptioncomboid") != null) {
 							innerSQL = innerSQL + " AND categoryoptioncomboid = " +  rs.getInt("categoryoptioncomboid") + ") as " + sqlvalue;
@@ -88,12 +89,12 @@ public class NumeratorDenominatorResource {
 						if (rs.getString("dataelementid") != null) 
 							innerSQL1 = innerSQL1 + innerSQL;
 					}
-					if (rs.getString("precedingoperator") != null)
+					if (rs.getString("precedingoperator") != null)                                                
 						outersql = outersql + rs.getString("precedingoperator").trim();
 					if (rs.getString("dataelementid") != null)
 						outersql = outersql + sqlvalue1;
 					if (rs.getString("midoperator") != null)
-						if (rs.getString("midoperator") != "AND")
+						if (!(rs.getString("midoperator").equals("AND")) )
 							outersql = outersql + rs.getString("midoperator").trim();
 					if (rs.getString("endoperator") != null)
 					    outersql = outersql + rs.getString("endoperator").trim();
@@ -147,7 +148,7 @@ public class NumeratorDenominatorResource {
 			   }
 			}
 			
-
+// ===================================== Denominator =====================================
 			sqlselect = "";
 			String sqldenominator = "denominator";
 			sqlvalue = "";
@@ -182,7 +183,8 @@ public class NumeratorDenominatorResource {
 								}else{
 									computation="SUM";
 								}
-							innerSQL = innerSQL +  " COALESCE(" + computation + "(value::numeric), 0) as " + sqlvalue1 + " from test_ward_org_unit where dataelementid = " + rs.getInt("dataelementid");
+							innerSQL = innerSQL +  " COALESCE(" + computation + "(value::numeric), 0) as " + sqlvalue1 + " from fact_dhis_datavalue where dataelementid = " + rs.getInt("dataelementid")+
+                                                               " and value is not null and (length(value) !=0)";
 							}
 						if (rs.getString("categoryoptioncomboid") != null) {
 								innerSQL = innerSQL + " AND categoryoptioncomboid = " +  rs.getInt("categoryoptioncomboid") + ") as " + sqlvalue;
@@ -217,7 +219,7 @@ public class NumeratorDenominatorResource {
 						if (rs.getString("dataelementid") != null)
 							outersql = outersql + sqlvalue1;
 						if (rs.getString("midoperator") != null)
-							if (rs.getString("midoperator") != "AND")
+                                                        if (!(rs.getString("midoperator").equals("AND")) )
 								outersql = outersql + rs.getString("midoperator").trim();
 						if (rs.getString("endoperator") != null)
 						    outersql = outersql + rs.getString("endoperator").trim();
@@ -320,6 +322,7 @@ public class NumeratorDenominatorResource {
 				       }
 				   }
 				}
+                System.out.println(numeratorSQL + " / " + denominatorSQL);
 		return numeratorSQL + " / " + denominatorSQL;
 		}
 	
